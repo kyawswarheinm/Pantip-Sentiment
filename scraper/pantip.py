@@ -27,6 +27,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
 from db.client import db_session
 
@@ -71,7 +72,8 @@ def _build_driver(ua: str) -> webdriver.Chrome:
     opts.add_argument(f"--user-agent={ua}")
     opts.add_experimental_option("excludeSwitches", ["enable-automation"])
     opts.add_experimental_option("useAutomationExtension", False)
-    driver = webdriver.Chrome(options=opts)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=opts)
     driver.set_page_load_timeout(30)  # raise TimeoutException instead of hanging 120s
     return driver
 
