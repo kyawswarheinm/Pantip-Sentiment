@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 import streamlit as st
@@ -301,20 +301,11 @@ with st.sidebar:
     )
 
     today = date.today()
-    date_range = st.date_input(
-        "Date range",
-        value=(today - timedelta(days=30), today),
-        max_value=today,
-    )
-    if isinstance(date_range, (list, tuple)) and len(date_range) == 2:
-        start_date, end_date = date_range
-    else:
-        start_date, end_date = today - timedelta(days=30), today
 
     window_days: int = st.selectbox(
         "Rolling window",
         options=[1, 7, 14, 30],
-        index=1,
+        index=3,
         format_func=lambda x: f"{x} day{'s' if x > 1 else ''}",
     )
 
@@ -347,8 +338,8 @@ with st.sidebar:
 # ---------------------------------------------------------------------------
 # Shared state
 # ---------------------------------------------------------------------------
-start_str = start_date.isoformat()
-end_str   = end_date.isoformat()
+start_str = "2024-01-01"
+end_str   = today.isoformat()
 
 rankings_df = load_sentiment_rankings(start_str, end_str)
 volume_df   = load_volume_timeseries(start_str, end_str)
@@ -386,13 +377,11 @@ with tab_overview:
             render_sentiment_ranking(rankings_df)
 
         with col_side:
-            days_span = (end_date - start_date).days
             st.markdown(
                 f'<h1 style="font-size:1.5rem;font-weight:700;color:#e8edf5;margin-bottom:2px">'
                 f'SET Sentiment Monitor</h1>'
                 f'<p style="font-size:0.82rem;color:#475569;margin-bottom:16px">'
-                f'{len(active_in_range)} tickers · last {days_span} days · '
-                f'{start_date.strftime("%d %b")}–{end_date.strftime("%d %b %Y")}'
+                f'{len(active_in_range)} tickers · all time'
                 f'</p>',
                 unsafe_allow_html=True,
             )
@@ -511,7 +500,7 @@ with tab_compare:
                 .set_index("ticker")
             )
             st.markdown(
-                '<p class="sec-label" style="margin-top:20px">Ticker summary</p>',
+                '<p class="sec-label" style="margin-top:20px">Ticker summary (Sentiment)</p>',
                 unsafe_allow_html=True,
             )
             ncols = min(len(compare_tickers), 4)
@@ -539,6 +528,16 @@ with tab_compare:
                         f'</div>',
                         unsafe_allow_html=True,
                     )
+            st.markdown(
+                '<div style="font-size:0.9rem;color:#cccccc;line-height:1.7;margin-top:8px">'
+                '&bull; <b>Score (−1 to +1)</b> — average sentiment across all scored posts '
+                'mentioning the ticker, computed by XLM-RoBERTa from Pantip.com threads. '
+                'Not a market price or analyst rating.<br>'
+                '&bull; <b>Post count</b> — number of Pantip threads mentioning this ticker '
+                'that were successfully scraped and scored by the pipeline.'
+                '</div>',
+                unsafe_allow_html=True,
+            )
 
 # ── Tab 3: Posts & Alerts ─────────────────────────────────────────────────
 with tab_posts:

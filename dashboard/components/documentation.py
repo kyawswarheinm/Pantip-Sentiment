@@ -66,7 +66,7 @@ def _render_toc() -> None:
     st.markdown(
         """
 <div style="background:#0d1526;border:1px solid #1e3050;border-radius:10px;padding:18px 21px;margin-bottom:36px">
-  <p style="text-align:center;color:#e2e8f0;font-size:1.0rem;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 8px 0;font-weight:700">Table of Contents</p>
+  <p style="text-align:center;color:#e2e8f0;font-size:1.0rem;letter-spacing:0.1em;text-transform:uppercase;margin:-4px 0 6px 0;font-weight:700">Table of Contents</p>
 
   <div style="display:flex;align-items:center;gap:10px;margin:4px 0 4px 0">
     <div style="flex:1;height:1px;background:#1e3050"></div>
@@ -663,7 +663,7 @@ A few notices about the backtest:
     _section_label("Known limitations", anchor="limitations")
     st.markdown(
         """
-- **Analytics tab date filters use `scored_at`, not `posted_at`**, since some posts may have a NULL `posted_at` from SSR datetime parsing.
+- **Some posts have a NULL `posted_at`** because Pantip's SSR datetime parser occasionally fails. Time-series charts use `posted_at` where available and fall back to `scored_at` otherwise — so a small fraction of posts may cluster around the pipeline run date rather than when they were actually written.
 - **Reply counts are sourced inconsistently** — the live scraper uses fast heuristic HTML parsing; the backfill scripts use Pantip's accurate AJAX endpoint.
 - **The Thai alias dictionary covers ~50 names by hand** — tickers outside that list rely on exact-symbol or fuzzy matching with no alias safety net.
 - **No human-labeled ground truth** — model accuracy relies on the pre-trained XLM-RoBERTa checkpoint; no Thai financial-sentiment ground truth exists to evaluate against.

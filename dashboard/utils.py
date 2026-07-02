@@ -49,7 +49,8 @@ def load_sentiment_rankings(start: str, end: str) -> pd.DataFrame:
                    COUNT(DISTINCT pt.post_id)      AS post_count
             FROM scores s
             JOIN post_tickers pt ON pt.id = s.post_ticker_id
-            WHERE date(s.scored_at) BETWEEN ? AND ?
+            JOIN posts p ON p.post_id = pt.post_id
+            WHERE date(COALESCE(p.posted_at, s.scored_at)) BETWEEN ? AND ?
             GROUP BY pt.ticker
             ORDER BY avg_sentiment DESC
             """,
@@ -67,10 +68,12 @@ def load_volume_timeseries(start: str, end: str) -> pd.DataFrame:
     with db_session() as db:
         rows = db.fetchall(
             """
-            SELECT date(s.scored_at) AS day,
+            SELECT date(COALESCE(p.posted_at, s.scored_at)) AS day,
                    COUNT(DISTINCT s.post_ticker_id) AS post_count
             FROM scores s
-            WHERE date(s.scored_at) BETWEEN ? AND ?
+            JOIN post_tickers pt ON pt.id = s.post_ticker_id
+            JOIN posts p ON p.post_id = pt.post_id
+            WHERE date(COALESCE(p.posted_at, s.scored_at)) BETWEEN ? AND ?
             GROUP BY day
             ORDER BY day
             """,
@@ -100,14 +103,15 @@ def load_sentiment_timeseries(
     with db_session() as db:
         rows = db.fetchall(
             f"""
-            SELECT date(s.scored_at) AS day,
+            SELECT date(COALESCE(p.posted_at, s.scored_at)) AS day,
                    pt.ticker,
                    AVG(s.sentiment) AS mean_sentiment,
                    COUNT(*) AS post_count
             FROM scores s
             JOIN post_tickers pt ON pt.id = s.post_ticker_id
+            JOIN posts p ON p.post_id = pt.post_id
             WHERE pt.ticker IN ({placeholders})
-              AND date(s.scored_at) BETWEEN ? AND ?
+              AND date(COALESCE(p.posted_at, s.scored_at)) BETWEEN ? AND ?
             GROUP BY day, pt.ticker
             ORDER BY day
             """,
@@ -240,7 +244,7 @@ def load_summary_metrics(tickers: tuple[str, ...], start: str, end: str) -> dict
             JOIN post_tickers pt ON pt.post_id = p.post_id
             JOIN scores s ON s.post_ticker_id = pt.id
             WHERE pt.ticker IN ({placeholders})
-              AND date(s.scored_at) BETWEEN ? AND ?
+              AND date(COALESCE(p.posted_at, s.scored_at)) BETWEEN ? AND ?
             """,
             (*tickers, start, end),
         )

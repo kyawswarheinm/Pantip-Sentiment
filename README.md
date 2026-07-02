@@ -232,7 +232,7 @@ Some brain-itching issues were found while building this — kept a log here in 
 ## Limitations
 
 - **The data is mostly from 2025 onward — it's not a long historical record.** Only 3 of 2,542 scraped posts are from before 2025. Don't treat this as multi-year historical data without checking that your target date range has enough coverage.
-- **The dashboard date filter uses `scored_at`, not `posted_at`.** Some posts have a NULL `posted_at` because Pantip's SSR datetime parser occasionally fails. To avoid excluding those posts, the date filter uses `scored_at` — so it answers "what was scored in this window," not "what was posted then."
+- **Some posts have a NULL `posted_at` because Pantip's SSR datetime parser occasionally fails.** Time-series charts use `posted_at` where available and fall back to `scored_at` otherwise — so a small fraction of posts may cluster around the pipeline run date rather than when they were actually written.
 - **The Thai company alias dictionary only covers ~50 names.** Tickers outside that list fall back to exact-symbol or fuzzy matching with no alias safety net.
 - **There's no human-labeled data to verify accuracy against.** Sentiment scores come from `cardiffnlp/twitter-xlm-roberta-base-sentiment` — a general-purpose multilingual model not fine-tuned on Thai financial text. There is no ground-truth Thai financial sentiment dataset to validate it with.
 

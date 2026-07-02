@@ -44,3 +44,7 @@ htmlcov/
 
 # Kaggle API credentials (use env vars instead)
 kaggle.json
+
+pantip_sentiment_eda.ipynb
+pantip_sentiment_eda-answer.ipynb
+pantip_set_sentiment_20260701.csv
