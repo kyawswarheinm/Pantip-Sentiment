@@ -15,13 +15,23 @@ CACHE_TTL: int = int(os.getenv("STREAMLIT_CACHE_TTL", "900"))
 
 @st.cache_data(ttl=CACHE_TTL)
 def load_last_updated() -> str | None:
-    """Return the most recent scored_at timestamp as a formatted string, or None."""
-    from db.client import db_session
-    with db_session() as db:
-        rows = db.fetchall("SELECT MAX(scored_at) AS ts FROM scores")
-    if not rows or not rows[0]["ts"]:
-        return None
-    return rows[0]["ts"]
+    """Return the completion time of the last successful scrape workflow run."""
+    import requests
+    try:
+        resp = requests.get(
+            "https://api.github.com/repos/kyawswarheinm/pantip-sentiment"
+            "/actions/workflows/scrape.yml/runs",
+            params={"status": "success", "per_page": 1},
+            headers={"Accept": "application/vnd.github+json"},
+            timeout=5,
+        )
+        if resp.status_code == 200:
+            runs = resp.json().get("workflow_runs", [])
+            if runs:
+                return runs[0]["updated_at"]
+    except Exception:
+        pass
+    return None
 
 
 @st.cache_data(ttl=CACHE_TTL)

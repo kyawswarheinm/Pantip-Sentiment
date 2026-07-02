@@ -320,7 +320,7 @@ with st.sidebar:
     if _ts_raw:
         try:
             from datetime import datetime as _dt
-            _ts = _dt.fromisoformat(_ts_raw)
+            _ts = _dt.fromisoformat(_ts_raw.replace("Z", "+00:00"))
             _ts_label = f"{_ts.day} {_ts.strftime('%b')} · {_ts.strftime('%H:%M')} UTC"
         except Exception:
             _ts_label = _ts_raw[:16]
