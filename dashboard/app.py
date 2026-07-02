@@ -339,7 +339,7 @@ with st.sidebar:
         'style="font-size:0.86rem;color:#9fafbf;text-decoration:none;display:block;margin-bottom:3px">'
         'View <span style="color:#3b82f6;text-decoration:underline">GitHub Repository</span> ↗'
         '</a>'
-        '<div style="font-size:0.6rem;color:#3a4f62">© 2026 Kyaw Swar Hein · MIT License</div>'
+        '<div style="font-size:0.7rem;color:#3a4f62">© 2026 Kyaw Swar Hein · MIT License</div>'
         '</div>',
         unsafe_allow_html=True,
     )
