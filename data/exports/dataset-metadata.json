@@ -1,6 +1,7 @@
 {
   "title": "Pantip SET Sentiment — Thai Stock Discussion NLP",
   "id": "kyawswarheinm/pantip-set-sentiment",
-  "licenses": [{"name": "CC0-1.0"}],
+  "licenses": [{"name": "CC-BY-SA-4.0"}],
+  "keywords": ["nlp", "text-data", "finance", "sentiment-analysis", "economics"],
   "description": "Daily-updated sentiment scores for SET-listed Thai stocks, derived from Pantip.com discussion posts. Each row is a post linked to a stock ticker with a continuous sentiment score in [-1, 1] from a multilingual XLM-RoBERTa model. Note: replies and posted_at fields are best-effort — Pantip's React-rendered stats are not always available at scrape time and may be 0 or null for some posts."
 }
