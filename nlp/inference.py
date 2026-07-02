@@ -37,7 +37,7 @@ MODEL_NAME: str = os.getenv(
     "MODEL_NAME", "cardiffnlp/twitter-xlm-roberta-base-sentiment"
 )
 CONFIDENCE_THRESHOLD: float = float(
-    os.getenv("SENTIMENT_CONFIDENCE_THRESHOLD", "0.65")
+    os.getenv("SENTIMENT_CONFIDENCE_THRESHOLD", "0.55")
 )
 FINE_TUNED_PATH = Path(__file__).parent.parent / "models" / "wangchanberta_finetuned.pt"
 
