@@ -3,5 +3,87 @@
   "id": "kyawswarheinm/pantip-set-sentiment",
   "licenses": [{"name": "CC-BY-SA-4.0"}],
   "keywords": ["NLP", "Data Visualization", "Data Analytics", "Exploratory Data Analysis", "Thai"],
-  "description": "Auto updated every 3 hours, sentiment scores for SET-listed Thai stocks derived from discussions on Pantip.com—Thailand's largest public forum for retail investor stock discussions.\n\n## How the pipeline works\n\nThe pipeline runs every 3 hours on GitHub Actions: Selenium scrapes 5 investment tag pages, a four-pass entity matcher links each post to a SET ticker (exact symbol → company name → alias dictionary → RapidFuzz fuzzy match), and cardiffnlp/twitter-xlm-roberta-base-sentiment scores the Thai text. Only predictions with confidence >= 0.55 are kept.\n\nEach row in the dataset is one post linked to one ticker. A single post can appear multiple times if it mentions more than one stock.\n\n## Data notes\n\n- replies and posted_at are best-effort — Pantip's React-rendered stats are not always available at scrape time and may be 0 or null for some posts.\n- scored_at is always populated; use it for date filtering if posted_at is null.\n- The dataset covers mostly 2025 onward. Only 3 of ~2,500 scraped posts predate 2025.\n- The model is a general-purpose multilingual model, not fine-tuned on Thai financial text. No labeled ground truth exists to validate it against.\n\n## Get started\n\nA beginner-friendly EDA notebook with 9 guided exercises is published alongside this dataset — covering data loading, entity matching quality, model confidence, ticker sentiment rankings, time-series trends, and engagement analysis.\n\nLive dashboard: https://pantip-sentiment.streamlit.app\nSource code: https://github.com/kyawswarheinm/pantip-sentiment"
+  "description": "Auto updated every 3 hours, sentiment scores for SET-listed Thai stocks derived from discussions on Pantip.com—Thailand's largest public forum for retail investor stock discussions.\n\n## How the pipeline works\n\nThe pipeline runs every 3 hours on GitHub Actions: Selenium scrapes 5 investment tag pages, a four-pass entity matcher links each post to a SET ticker (exact symbol → company name → alias dictionary → RapidFuzz fuzzy match), and cardiffnlp/twitter-xlm-roberta-base-sentiment scores the Thai text. Only predictions with confidence >= 0.55 are kept.\n\nEach row in the dataset is one post linked to one ticker. A single post can appear multiple times if it mentions more than one stock.\n\n## Data notes\n\n- replies and posted_at are best-effort — Pantip's React-rendered stats are not always available at scrape time and may be 0 or null for some posts.\n- scored_at is always populated; use it for date filtering if posted_at is null.\n- The dataset covers mostly 2025 onward. Only 3 of ~2,500 scraped posts predate 2025.\n- The model is a general-purpose multilingual model, not fine-tuned on Thai financial text. No labeled ground truth exists to validate it against.\n\n## Get started\n\nA beginner-friendly EDA notebook with 9 guided exercises is published alongside this dataset — covering data loading, entity matching quality, model confidence, ticker sentiment rankings, time-series trends, and engagement analysis.\n\nLive dashboard: https://pantip-sentiment.streamlit.app\nSource code: https://github.com/kyawswarheinm/pantip-sentiment",
+  "resources": [
+    {
+      "path": "pantip_set_sentiment.csv",
+      "description": "One row per post-ticker pair. A single post mentioning multiple tickers appears multiple times. Updated every 3 hours via automated GitHub Actions pipeline.",
+      "schema": {
+        "fields": [
+          {
+            "name": "post_id",
+            "title": "Post ID",
+            "description": "Unique Pantip thread identifier extracted from the topic URL.",
+            "type": "string"
+          },
+          {
+            "name": "title_th",
+            "title": "Title (Thai)",
+            "description": "Post title in Thai as displayed on Pantip.",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "title": "URL",
+            "description": "Direct link to the Pantip thread.",
+            "type": "string"
+          },
+          {
+            "name": "replies",
+            "title": "Reply Count",
+            "description": "Number of comments on the post. Best-effort — may be 0 if Pantip's JavaScript-rendered stats were unavailable at scrape time.",
+            "type": "integer"
+          },
+          {
+            "name": "posted_at",
+            "title": "Posted At",
+            "description": "UTC timestamp when the post was published. Null for posts where Pantip's datetime markup failed to parse. Use scored_at as a fallback.",
+            "type": "string"
+          },
+          {
+            "name": "ticker",
+            "title": "Ticker",
+            "description": "SET-listed stock ticker symbol linked to this post by the entity matcher.",
+            "type": "string"
+          },
+          {
+            "name": "match_confidence",
+            "title": "Match Confidence",
+            "description": "Confidence score (0–1) from the entity matching step. Exact symbol matches are always 1.0; fuzzy matches are lower.",
+            "type": "number"
+          },
+          {
+            "name": "match_method",
+            "title": "Match Method",
+            "description": "How the ticker was identified: 'exact' (ticker symbol in text), 'alias' (Thai company name or nickname), or 'fuzzy' (approximate match via RapidFuzz at threshold 92).",
+            "type": "string"
+          },
+          {
+            "name": "sentiment",
+            "title": "Sentiment Score",
+            "description": "Continuous sentiment score from -1.0 (most negative) to +1.0 (most positive). Positive label → +confidence, negative label → -confidence, neutral label → 0.0.",
+            "type": "number"
+          },
+          {
+            "name": "confidence",
+            "title": "Model Confidence",
+            "description": "Softmax probability of the winning sentiment label from XLM-RoBERTa. Only rows with confidence >= 0.55 are stored. Random chance baseline is 0.33 for a 3-class model.",
+            "type": "number"
+          },
+          {
+            "name": "label",
+            "title": "Sentiment Label",
+            "description": "Predicted sentiment class: 'positive', 'neutral', or 'negative'.",
+            "type": "string"
+          },
+          {
+            "name": "scored_at",
+            "title": "Scored At",
+            "description": "UTC timestamp when the NLP model scored this post. Always populated — use as date fallback when posted_at is null.",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ]
 }

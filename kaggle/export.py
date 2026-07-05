@@ -69,10 +69,11 @@ def _query_scored_posts() -> pd.DataFrame:
 
 
 def export_to_csv(df: pd.DataFrame) -> Path:
-    """Write the DataFrame to a dated CSV file in data/exports/."""
+    """Write the DataFrame to a fixed-name CSV in data/exports/."""
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
-    today = datetime.utcnow().strftime("%Y%m%d")
-    path = EXPORT_DIR / f"pantip_set_sentiment_{today}.csv"
+    for old in EXPORT_DIR.glob("pantip_set_sentiment_*.csv"):
+        old.unlink()
+    path = EXPORT_DIR / "pantip_set_sentiment.csv"
     df.to_csv(path, index=False, encoding="utf-8-sig")
     logger.info("Exported %d rows to %s", len(df), path)
     return path
