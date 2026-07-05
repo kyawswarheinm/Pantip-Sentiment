@@ -31,13 +31,13 @@
           {
             "name": "replies",
             "title": "Reply Count",
-            "description": "Number of comments on the post. Best-effort — may be 0 if Pantip's JavaScript-rendered stats were unavailable at scrape time.",
+            "description": "Number of comments on the post.",
             "type": "integer"
           },
           {
             "name": "posted_at",
             "title": "Posted At",
-            "description": "UTC timestamp when the post was published. Null for posts where Pantip's datetime markup failed to parse. Use scored_at as a fallback.",
+            "description": "UTC timestamp when the post was published.",
             "type": "string"
           },
           {
@@ -49,7 +49,7 @@
           {
             "name": "match_confidence",
             "title": "Match Confidence",
-            "description": "Confidence score (0–1) from the entity matching step. Exact symbol matches are always 1.0; fuzzy matches are lower.",
+            "description": "Confidence score (0–1) from the entity matching step.",
             "type": "number"
           },
           {
@@ -61,7 +61,7 @@
           {
             "name": "sentiment",
             "title": "Sentiment Score",
-            "description": "Continuous sentiment score from -1.0 (most negative) to +1.0 (most positive). Positive label → +confidence, negative label → -confidence, neutral label → 0.0.",
+            "description": "Continuous sentiment score from -1.0 (most negative) to +1.0 (most positive).",
             "type": "number"
           },
           {
@@ -79,7 +79,7 @@
           {
             "name": "scored_at",
             "title": "Scored At",
-            "description": "UTC timestamp when the NLP model scored this post. Always populated — use as date fallback when posted_at is null.",
+            "description": "UTC timestamp when the NLP model scored this post.",
             "type": "string"
           }
         ]
