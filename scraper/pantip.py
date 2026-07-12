@@ -346,9 +346,15 @@ def _insert_posts(posts: list[dict[str, Any]]) -> int:
         )
         for p in posts
     ]
-    with db_session() as db:
-        db.executemany(sql, rows)
-    return len(rows)
+    try:
+        with db_session() as db:
+            db.executemany(sql, rows)
+        return len(rows)
+    except RuntimeError as exc:
+        if "writes are blocked" in str(exc) or "forbidden" in str(exc).lower():
+            logger.warning("Turso write limit reached — %d posts scraped but not stored", len(rows))
+            return 0
+        raise
 
 
 # ---------------------------------------------------------------------------

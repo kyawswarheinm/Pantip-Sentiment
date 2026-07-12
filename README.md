@@ -227,6 +227,16 @@ Some brain-itching issues were found while building this — kept a log here in 
 
 - **The live scraper only captures what's trending right now — not significant for a correlation study that requires more data.** Pantip's tag pages only surface recent activity, so the pipeline would take months to accumulate enough posts on its own. A one-time backfill (`scripts/backfill.py`) scrolled the same five boards 30× deeper than a normal run, pulling ~2,500 posts back to September 2025 in a single pass. The caveat: only 3 posts predate 2025 — old evergreen threads that resurfaced in a listing — so it's a denser recent slice, not a true historical archive.
 
+### ChromeDriver Version Mismatch Silently Killing 3 Boards
+
+- **Three of five Pantip tag pages returned 0 topic links after Chrome auto-updated on GitHub Actions runners.** The runner installs the latest `google-chrome-stable` on each run, but the `chromedriver` already in PATH was one major version behind (149 vs 150). The version gap caused those heavier JS pages to render blank — `_parse_topic_links` found no `<a href="/topic/...">` links and silently returned empty. The `หุ้น` and `ตลาดหลักทรัพย์` boards still worked because they load faster; `ลงทุน`, `กองทุน`, and `SET` did not.
+- **Fixed by switching to `webdriver-manager`.** Adding `ChromeDriverManager().install()` as the `Service` path in `_build_driver()` auto-downloads and caches the exact ChromeDriver version that matches whatever Chrome is installed, regardless of what the runner already has in PATH.
+
+### Turso Free Plan Write Limit Blocking the Pipeline
+
+- **After several months of 3-hourly runs, Turso's free tier hit its monthly row-write quota and started rejecting all `INSERT` statements with `"SQL write operations are forbidden (writes are blocked)"`.** The error propagated all the way up and caused the GitHub Actions job to exit with code 1, meaning no subsequent steps (NLP inference, Kaggle export) ran either.
+- **Fixed on two fronts.** First, `_insert_posts` and `score_pending_posts` now catch the `RuntimeError`, log a warning, and return 0 instead of crashing — so the pipeline completes cleanly even when writes are blocked. Second, the cron schedule was reduced from every 3 hours to every 12 hours to cut monthly write volume by 75% and stay within the free tier budget going forward.
+
 ---
 
 ## Limitations

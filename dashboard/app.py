@@ -331,7 +331,7 @@ with st.sidebar:
     st.markdown(
         '<div style="padding-top:16px;font-size:0.68rem;color:#5f6f7f;'
         'line-height:1.6;border-top:1px solid #1e3050">'
-        'Updates every 3 h · GitHub Actions<br>'
+        'Updates every 12 h · GitHub Actions<br>'
         f'Last updated: <span style="color:#94a3b8">{_ts_label}</span><br>'
         'Model: XLM-RoBERTa (Cardiff)'
         '</div>',

@@ -233,11 +233,16 @@ def score_pending_posts() -> int:
         INSERT INTO scores (post_ticker_id, sentiment, confidence, label)
         VALUES (?, ?, ?, ?)
     """
-    with db_session() as db:
-        db.executemany(sql, score_rows)
-
-    logger.info("Inserted %d score rows", len(score_rows))
-    return len(score_rows)
+    try:
+        with db_session() as db:
+            db.executemany(sql, score_rows)
+        logger.info("Inserted %d score rows", len(score_rows))
+        return len(score_rows)
+    except RuntimeError as exc:
+        if "writes are blocked" in str(exc) or "forbidden" in str(exc).lower():
+            logger.warning("Turso write limit reached — %d scores computed but not stored", len(score_rows))
+            return 0
+        raise
 
 
 def main() -> None:

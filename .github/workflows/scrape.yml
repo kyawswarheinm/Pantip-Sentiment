@@ -2,7 +2,7 @@ name: Scrape and score
 
 on:
   schedule:
-    - cron: '0 */3 * * *'   # every 3 hours
+    - cron: '0 */12 * * *'  # every 12 hours
   workflow_dispatch:          # manual trigger
 
 jobs:
