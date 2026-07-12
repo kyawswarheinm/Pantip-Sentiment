@@ -1,7 +1,7 @@
 """
-WangchanBERTa sentiment inference pipeline.
+Sentiment inference pipeline using cardiffnlp/twitter-xlm-roberta-base-sentiment.
 
-Loads `airesearch/wangchanberta-base-att-spm-uncased` from HuggingFace.
+Default model is overridable via the MODEL_NAME environment variable.
 If fine-tuned weights exist at models/wangchanberta_finetuned.pt, those
 are loaded on top of the base model.
 

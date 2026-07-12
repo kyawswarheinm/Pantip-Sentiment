@@ -412,7 +412,7 @@ Only predictions with confidence ≥ 0.55 are stored — roughly 1.65× the rand
 
 - **Alerts**  —  for each ticker, a Z-score measures how many standard deviations today's rolling sentiment is from the historical mean; |Z| > 0.65 fires an alert.
 
-- **Backtest**  —  downloads historical prices from [yfinance](https://github.com/ranaroussi/yfinance) and computes Pearson r (via [SciPy](https://github.com/scipy/scipy)) between lagged sentiment and next-day price returns, asking whether yesterday's sentiment predicts today's move.
+- **Backtest**  —  downloads historical prices from [yfinance](https://github.com/ranaroussi/yfinance) and computes Pearson r and Spearman r (via [SciPy](https://github.com/scipy/scipy)) between lagged sentiment and next-day price returns at lags 0–5 trading days, asking whether yesterday's sentiment predicts today's move.
 
 - **Kaggle Export**  —  the full dataset is uploaded to [Kaggle](https://www.kaggle.com/datasets/kyawswarheinm/pantip-set-sentiment) as a CSV every 12 hours via GitHub Actions.
 
@@ -517,7 +517,7 @@ def render_documentation_tab() -> None:
 - *[PyThaiNLP](https://github.com/PyThaiNLP/pythainlp) + [RapidFuzz](https://github.com/maxbachmann/RapidFuzz)* as **Entity Matching** (Thai text tokenization and fuzzy ticker linking)
 - *[HuggingFace Transformers](https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment) (XLM-RoBERTa)* as **NLP Model** (Multilingual sentiment inference)
 - *[yfinance](https://github.com/ranaroussi/yfinance)* as **Price Data** (Historical SET stock prices from Yahoo Finance)
-- *[SciPy](https://scipy.org/)* as **Backtest** (Pearson r and p-value for lag correlation)
+- *[SciPy](https://scipy.org/)* as **Backtest** (Pearson r + Spearman r and p-values for lag correlation at lags 0–5 days)
 - *[NumPy](https://numpy.org/)* as **Alerts** (Z-score spike detection)
 - *[Turso](https://turso.tech) (LibSQL / SQLite)* as **Database** (Cloud-hosted storage for posts, scores, prices, and alerts)
 - *[GitHub Actions](https://github.com/kyawswarheinm/Pantip-Sentiment/actions)* as **Automation** (12-hourly pipeline on free-tier runners)
