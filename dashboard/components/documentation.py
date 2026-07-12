@@ -393,7 +393,7 @@ XLM-RoBERTa is a transformer trained on 100 languages including Thai. The Cardif
 
 Inference: tokenise the post body → 12 attention layers → 3 output logits (positive / neutral / negative) → softmax → the winning class becomes the label, its probability becomes the confidence score
 
-Only predictions with confidence ≥ 0.65 are stored — roughly 2× the random-chance baseline of 0.33 for a 3-class model. Results go into `scores`: label (positive / neutral / negative), sentiment (−1 to +1), confidence (0 to 1).
+Only predictions with confidence ≥ 0.55 are stored — roughly 1.65× the random-chance baseline of 0.33 for a 3-class model. Results go into `scores`: label (positive / neutral / negative), sentiment (−1 to +1), confidence (0 to 1).
 """,
         unsafe_allow_html=False,
     )
@@ -540,7 +540,7 @@ Full write-up, problems encountered, and methodology in [the project README](htt
         """
     - Not all scraped posts contain text or mention a tracked stock.
     - Posts that mention a tracked stock produce a ticker link — only linked posts are eligible for scoring.
-    - Only predictions with confidence ≥ 0.65 are stored; lower-confidence outputs are discarded.
+    - Only predictions with confidence ≥ 0.55 are stored; lower-confidence outputs are discarded.
 
     ‎
 

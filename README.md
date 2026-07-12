@@ -172,7 +172,7 @@ All variables live in `.env` (see `.env.example`). Only the variables relevant t
 | Variable | Default | Notes |
 |---|---|---|
 | `MODEL_NAME` | `cardiffnlp/twitter-xlm-roberta-base-sentiment` | HuggingFace model ID |
-| `SENTIMENT_CONFIDENCE_THRESHOLD` | `0.65` | Predictions below this are discarded |
+| `SENTIMENT_CONFIDENCE_THRESHOLD` | `0.55` | Predictions below this are discarded |
 | `ZSCORE_THRESHOLD` | `2.5` | Alert sensitivity (standard deviations) |
 | `VOLUME_SURGE_MULTIPLIER` | `3.0` | Alert fires when post count exceeds N × 7-day avg |
 | `LOOKBACK_DAYS_ALERT` | `7` | Rolling window for alert baseline |
