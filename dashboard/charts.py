@@ -232,8 +232,8 @@ def build_data_flow_diagram(
     # ── Downstream consumers — fan out from scores bottom ───────────────────
     downstream = [
         ("Alert engine", f"{alerts_total} fired",  RED,    "alerts/spike_detector.py",  "NumPy Z-score"),
-        ("Backtest",     "every 3 hours",             VIOLET, "backtest/correlation.py",   "yfinance + SciPy"),
-        ("Kaggle export","every 3 hours",             SKY,    "kaggle/export.py",          "Kaggle API"),
+        ("Backtest",     "every 12 hours",            VIOLET, "backtest/correlation.py",   "yfinance + SciPy"),
+        ("Kaggle export","every 12 hours",            SKY,    "kaggle/export.py",          "Kaggle API"),
         ("Dashboard",    "4 tabs",                  ORANGE, "dashboard/app.py",          "Streamlit + Plotly"),
     ]
     DBW = 3.0
@@ -314,7 +314,7 @@ def build_automation_pipeline_figure(fig_width: int = 1000) -> go.Figure:
 
     fig.add_annotation(
         x=0, y=y1 + box_h + 0.42, xref="x", yref="y", xanchor="left", showarrow=False,
-        text="<b>scrape.yml</b> — every 3 hours&nbsp;&nbsp;(0 */3 * * *)",
+        text="<b>scrape.yml</b> — every 12 hours&nbsp;&nbsp;(0 */12 * * *)",
         font=dict(size=13, color=TEXT, family=FONT_FAMILY),
     )
     fig.add_annotation(

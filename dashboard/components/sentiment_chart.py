@@ -142,7 +142,7 @@ def render_sentiment_chart(
         '<b style="color:#cccccc">How the data is sourced</b><br>'
         '&bull; <b>Sentiment (Solid Lines)</b> — rolling average of post-level scores from '
         '<code>cardiffnlp/twitter-xlm-roberta-base-sentiment</code> (XLM-RoBERTa), '
-        'applied to Pantip.com investment threads scraped every 3 hours via GitHub Actions. '
+        'applied to Pantip.com investment threads scraped every 12 hours via GitHub Actions.'
         'Each data point is one day\'s smoothed score on a −1 (bearish) to +1 (bullish) scale.<br>'
         '&bull; <b>Price overlay (Dash Lines)</b> — actual daily closing price (฿) for the '
         'SET-listed ticker, fetched from <code>yfinance</code> during each pipeline run.<br>'

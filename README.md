@@ -1,6 +1,6 @@
 # Pantip SET Sentiment Monitor
 
-Thai retail investor discussion on [Pantip.com](https://pantip.com) — Thailand's largest public web forum — mined and scored for sentiment against SET-listed stocks. The pipeline scrapes threads, links them to tickers, runs a multilingual transformer (XLM-RoBERTa), and surfaces the results in a live Streamlit dashboard updated every 3 hours. Built entirely on free-tier infrastructure.
+Thai retail investor discussion on [Pantip.com](https://pantip.com) — Thailand's largest public web forum — mined and scored for sentiment against SET-listed stocks. The pipeline scrapes threads, links them to tickers, runs a multilingual transformer (XLM-RoBERTa), and surfaces the results in a live Streamlit dashboard updated every 12 hours. Built entirely on free-tier infrastructure.
 
 **[Kaggle Dataset](https://www.kaggle.com/datasets/kyawswarheinm/pantip-set-sentiment)** · LICENSE : CC BY-SA 4.0
 
@@ -73,9 +73,9 @@ streamlit run dashboard/app.py    # launch dashboard
 | Database | Turso (LibSQL) | 500 MB, 1B reads/month | Cloud SQLite, accessed via HTTP |
 | Frontend | Streamlit Community Cloud | Unlimited public apps | Live dashboard |
 | Price data | yfinance | Free | SET ticker OHLCV for lag-correlation backtest |
-| Data publishing | Kaggle Datasets | 20 GB | Scored-posts CSV, refreshed every 3 hours |
+| Data publishing | Kaggle Datasets | 20 GB | Scored-posts CSV, refreshed every 12 hours |
 
-The active workflow (`scrape.yml`) runs the full chain end-to-end every 3 hours. A second workflow (`kaggle_export.yml`) exists as a standalone export trigger, useful for testing the Kaggle step in isolation.
+The active workflow (`scrape.yml`) runs the full chain end-to-end every 12 hours. A second workflow (`kaggle_export.yml`) exists as a standalone export trigger, useful for testing the Kaggle step in isolation.
 
 ---
 
@@ -140,7 +140,7 @@ tests/
   test_spike_detector.py       Alert engine unit tests
 
 .github/workflows/
-  scrape.yml                   Full pipeline every 3 hours: scrape → link → NLP →
+  scrape.yml                   Full pipeline every 12 hours: scrape → link → NLP →
                                alerts → backtest → Kaggle export
   kaggle_export.yml            Standalone export step (currently disabled;
                                useful for testing the Kaggle step in isolation)

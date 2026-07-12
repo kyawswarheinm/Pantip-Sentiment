@@ -414,7 +414,7 @@ Only predictions with confidence ≥ 0.65 are stored — roughly 2× the random-
 
 - **Backtest**  —  downloads historical prices from [yfinance](https://github.com/ranaroussi/yfinance) and computes Pearson r (via [SciPy](https://github.com/scipy/scipy)) between lagged sentiment and next-day price returns, asking whether yesterday's sentiment predicts today's move.
 
-- **Kaggle Export**  —  the full dataset is uploaded to [Kaggle](https://www.kaggle.com/datasets/kyawswarheinm/pantip-set-sentiment) as a CSV every 3 hours via GitHub Actions.
+- **Kaggle Export**  —  the full dataset is uploaded to [Kaggle](https://www.kaggle.com/datasets/kyawswarheinm/pantip-set-sentiment) as a CSV every 12 hours via GitHub Actions.
 
 - **Dashboard**  —  [Streamlit](https://streamlit.io) + [Plotly](https://plotly.com/python/) served on Streamlit Community Cloud, reading live data from [Turso](https://turso.tech) on every page load.
 """,
@@ -427,7 +427,7 @@ Only predictions with confidence ≥ 0.65 are stored — roughly 2× the random-
 **5. GitHub Actions**
 
 Two workflows:
-- `scrape.yml` — **Active**, runs every 3 hours — scrape → entity-match → NLP score → alerts → backtest (price refresh + lag correlation) → Kaggle export. (The full automated pipeline end-to-end)
+- `scrape.yml` — **Active**, runs every 12 hours — scrape → entity-match → NLP score → alerts → backtest (price refresh + lag correlation) → Kaggle export. (The full automated pipeline end-to-end)
 - `kaggle_export.yml` — **Disabled**, serves as a standalone export trigger, useful for testing the Kaggle export step in isolation during development phase.
 """,
         unsafe_allow_html=False,
@@ -520,8 +520,8 @@ def render_documentation_tab() -> None:
 - *[SciPy](https://scipy.org/)* as **Backtest** (Pearson r and p-value for lag correlation)
 - *[NumPy](https://numpy.org/)* as **Alerts** (Z-score spike detection)
 - *[Turso](https://turso.tech) (LibSQL / SQLite)* as **Database** (Cloud-hosted storage for posts, scores, prices, and alerts)
-- *[GitHub Actions](https://github.com/kyawswarheinm/Pantip-Sentiment/actions)* as **Automation** (3-hourly pipeline on free-tier runners)
-- *[Kaggle](https://www.kaggle.com/datasets/kyawswarheinm/pantip-set-sentiment)* API as **Dataset Export** (Public CSV dataset refreshed every 3 hours)
+- *[GitHub Actions](https://github.com/kyawswarheinm/Pantip-Sentiment/actions)* as **Automation** (12-hourly pipeline on free-tier runners)
+- *[Kaggle](https://www.kaggle.com/datasets/kyawswarheinm/pantip-set-sentiment)* API as **Dataset Export** (Public CSV dataset refreshed every 12 hours)
 - *[Streamlit](https://streamlit.io) + [Plotly](https://plotly.com/python/)* as **Dashboard** (Read-only app served on [Streamlit Community Cloud](https://streamlit.io/cloud))
 
 Full write-up, problems encountered, and methodology in [the project README](https://github.com/kyawswarheinm/pantip-sentiment#readme).

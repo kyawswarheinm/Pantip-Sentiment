@@ -121,19 +121,25 @@ def _fire_alerts(to_fire: list[tuple[str, str, float, float]]) -> None:
     """Bulk-insert new alert rows: [(ticker, rule_type, trigger_value, threshold), ...]"""
     if not to_fire:
         return
-    with db_session() as db:
-        db.executemany(
-            """
-            INSERT INTO alerts (ticker, rule_type, trigger_value, threshold_used)
-            VALUES (?, ?, ?, ?)
-            """,
-            to_fire,
-        )
-    for ticker, rule, val, thresh in to_fire:
-        logger.warning(
-            "ALERT fired — ticker=%s rule=%s trigger=%.3f threshold=%.3f",
-            ticker, rule, val, thresh,
-        )
+    try:
+        with db_session() as db:
+            db.executemany(
+                """
+                INSERT INTO alerts (ticker, rule_type, trigger_value, threshold_used)
+                VALUES (?, ?, ?, ?)
+                """,
+                to_fire,
+            )
+        for ticker, rule, val, thresh in to_fire:
+            logger.warning(
+                "ALERT fired — ticker=%s rule=%s trigger=%.3f threshold=%.3f",
+                ticker, rule, val, thresh,
+            )
+    except RuntimeError as exc:
+        if "writes are blocked" in str(exc) or "forbidden" in str(exc).lower():
+            logger.warning("Turso write limit reached — %d alerts computed but not stored", len(to_fire))
+            return
+        raise
 
 
 # ---------------------------------------------------------------------------

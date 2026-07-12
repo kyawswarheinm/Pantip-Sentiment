@@ -85,8 +85,14 @@ def fetch_and_store_prices(
             volume     = excluded.volume,
             return_1d  = excluded.return_1d
     """
-    with db_session() as db:
-        db.executemany(sql, rows)
+    try:
+        with db_session() as db:
+            db.executemany(sql, rows)
+    except RuntimeError as exc:
+        if "writes are blocked" in str(exc) or "forbidden" in str(exc).lower():
+            logger.warning("Turso write limit reached — price data for %s not stored", ticker)
+            return 0
+        raise
 
     logger.info("Upserted %d price rows for %s", len(rows), ticker)
     return len(rows)

@@ -133,14 +133,20 @@ def push_to_kaggle(export_path: Path, row_count: int) -> bool:
 
 def _log_export(dataset_slug: str, version_note: str, rows_exported: int) -> None:
     """Record the export in the kaggle_exports audit table."""
-    with db_session() as db:
-        db.execute(
-            """
-            INSERT INTO kaggle_exports (dataset_slug, version_note, rows_exported)
-            VALUES (?, ?, ?)
-            """,
-            (dataset_slug, version_note, rows_exported),
-        )
+    try:
+        with db_session() as db:
+            db.execute(
+                """
+                INSERT INTO kaggle_exports (dataset_slug, version_note, rows_exported)
+                VALUES (?, ?, ?)
+                """,
+                (dataset_slug, version_note, rows_exported),
+            )
+    except RuntimeError as exc:
+        if "writes are blocked" in str(exc) or "forbidden" in str(exc).lower():
+            logger.warning("Turso write limit reached — export audit log not stored")
+            return
+        raise
 
 
 def run_export() -> None:
